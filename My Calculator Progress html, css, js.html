@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>225150601111003_Muhammad Arif Ardiansyah_Kalkulator</title>
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        table {
+            border-collapse: separate;
+            border-spacing: 10px;
+            background-color: #ffffff;
+            border: 2px solid #ddd;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        td {
+            text-align: center;
+            font-size: 24px;
+            background-color: #ffffff;
+            color: black;
+            border: 2px solid #ddd;
+            width: 75px;
+            height: 75px;
+            margin: 5px;
+        }
+
+        .btn-operator,
+        .btn {
+            width: 100%;
+            height: 100%;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-equals {
+            width: 100%;
+            height: 100%;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            color: white;
+        }
+
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .btn-operator:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-equals:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn,
+        .btn-operator {
+            user-select: none;
+        }
+
+        .btn-operator:active,
+        .btn:active,
+        .btn-equals:active {
+            background-color: lightblue;
+        }
+
+        #hapus {
+            background-color: rgb(255, 79, 79);
+            color: #ffffff;
+        }
+
+        #hasil {
+            width: 350px;
+            height: 70px;
+            padding: 10px;
+            background-color: #000000;
+            color: #ffffff;
+            text-align: right;
+            font-size: 36px;
+        }
+
+        #equals1 {
+            background-color: rgb(69, 135, 227);
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="calculator">
+        <div id="hasil">0</div>
+        <table>
+            <tr>
+                <td><button class="btn-operator" id="tambah">+</button></td>
+                <td><button class="btn-operator" id="kurang">-</button></td>
+                <td><button class="btn-operator" id="kali">x</button></td>
+                <td><button class="btn-operator" id="bagi">/</button></td>
+            </tr>
+            <tr>
+                <td><button class="btn" id="tujuh">7</button></td>
+                <td><button class="btn" id="delapan">8</button></td>
+                <td><button class="btn" id="sembilan">9</button></td>
+                <td rowspan="4" id="equals1"><button class="btn-equals" id="equals">=</button></td>
+            </tr>
+            <tr>
+                <td><button class="btn" id="empat">4</button></td>
+                <td><button class="btn" id="lima">5</button></td>
+                <td><button class="btn" id="enam">6</button></td>
+            </tr>
+            <tr>
+                <td><button class="btn" id="satu">1</button></td>
+                <td><button class="btn" id="dua">2</button></td>
+                <td><button class="btn" id="tiga">3</button></td>
+            </tr>
+            <tr>
+                <td><button class="btn" id="nol">0</button></td>
+                <td><button class="btn" id="desimal">.</button></td>
+                <td id="hapus"><button class="btn" id="hapus-btn">AC</button></td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        const hasil = document.getElementById("hasil");
+        const tbl = document.querySelectorAll(".btn, .btn-operator, .btn-equals");
+    
+        let inputN = "0";
+        let operatorN = null;
+        let angkaP = null;
+    
+        tbl.forEach((tbl) => {
+            tbl.addEventListener("click", () => {
+                if (tbl.id === 'nol' || tbl.id === 'satu' || tbl.id === 'dua' || tbl.id === 'tiga' || tbl.id === 'empat' || tbl.id === 'lima' || tbl.id === 'enam' || tbl.id === 'tujuh' || tbl.id === 'delapan' || tbl.id === 'sembilan') {
+                    if (inputN === "0" || operatorN !== null) {
+                        inputN = tbl.textContent;
+                    } else {
+                        inputN += tbl.textContent;
+                    }
+                } else if (tbl.id === "desimal") {
+                    if (!inputN.includes(".")) {
+                        inputN += tbl.textContent;
+                    }
+                } else if (tbl.id === "hapus-btn") {
+                    inputN = "0";
+                    angkaP = null;
+                    operatorN = null;
+                } else if (tbl.id === "equals") {
+                    if (operatorN && angkaP !== null) {
+                        inputN = hitung(angkaP, inputN, operatorN).toString();
+                        angkaP = null;
+                        operatorN = null;
+                    }
+                } else {
+                    if (operatorN && angkaP !== null) {
+                        inputN = hitung(angkaP, inputN, operatorN).toString();
+                        angkaP = parseFloat(inputN);
+                        inputN = "";
+                    } else {
+                        angkaP = parseFloat(inputN);
+                        inputN = "";
+                    }
+                    operatorN = tbl.textContent;
+                }
+                hasil.textContent = inputN + " " + (operatorN ? operatorN : '');
+            });
+        });
+    
+        function hitung(a, b, operator) {
+            a = parseFloat(a);
+            b = parseFloat(b);
+            switch (operator) {
+                case "+":
+                    return a + b;
+                case "-":
+                    return a - b;
+                case "x":
+                    return a * b;
+                case "/":
+                    if (b !== 0) {
+                        return a / b;
+                    } else {
+                        return "Error";
+                    }
+                default:
+                    return b;
+            }
+        }
+    </script>
+
+</body>
+
+</html>
